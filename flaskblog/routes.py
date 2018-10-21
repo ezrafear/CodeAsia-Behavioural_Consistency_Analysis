@@ -3,6 +3,7 @@ from flaskblog import app
 from flaskblog.forms import RegistrationForm, LoginForm
 from flaskblog.interviewform import InterviewForm
 from flaskblog.models import User, Post
+import random
 
 posts = [
     {
@@ -20,6 +21,7 @@ posts = [
 ]
 
 
+@app.route("/")
 @app.route("/home")
 def home():
     return render_template('home.html', posts=posts)
@@ -51,11 +53,16 @@ def login():
     return render_template('login.html', title='Login', form=form)
 
 
-@app.route("/")
 @app.route("/interview", methods=['GET', 'POST'])
 def interview():
     form = InterviewForm()
     if form.validate_on_submit():
         flash(f'Submitted questions!', 'success')
-        return redirect(url_for('home'))
+        return redirect(url_for('result'))
     return render_template('interview.html', title='Interview', form=form)
+
+
+@app.route("/result")
+def result():
+    score = random.randint(0, 101)
+    return render_template('result.html', title='Result', score=score)
